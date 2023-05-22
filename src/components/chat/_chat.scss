@@ -1,0 +1,219 @@
+.chat {
+    &-container {
+        @include flexbox;
+        flex-direction: column-reverse;
+        padding-bottom: $safeArea*8;
+
+        @include media(tablet) {
+            min-height: 30vh;
+            padding-bottom: 40vh;
+        }
+    }
+
+    &Section {
+        transition: all 500ms;
+
+        &:first-child {
+            padding-top: 0;
+        }
+
+        &:last-child {
+            padding-bottom: $safeArea*3;
+        }
+    }
+
+    &Part {
+        position: relative;
+        padding-left: $safeArea;
+        padding-bottom: $safeArea*2;
+        width: 100%;
+        @extend %cf;
+
+        //each section
+        &:first-child {
+            .chatPart {
+                &-human,
+                &-bot {
+                    padding-top: 0;
+                }
+
+                &-title {
+                    font-size: $fontXL;
+                    font-weight: $fBold;
+                }
+
+                &-bot {
+                    animation-delay: 150ms;
+                }
+
+                &-text {
+                    width: 100%;
+                    padding-top: $safeArea/2;
+                }
+            }
+        }
+
+        // human part with titles
+        &-human {
+            width: 100%;
+            padding: 0;
+            overflow: hidden;
+            display: none;
+            opacity: 0;
+            animation: showText 500ms steps(7);
+            animation-fill-mode: forwards;
+            animation-delay: 200ms;
+        }
+
+        &-title {
+            display: inline-block;
+            font-family: $font-mono;
+            font-size: $fontM;
+            font-weight: $fBold;
+            color: $clrPrimary;
+
+            // a11y purposes
+            &:focus {
+                outline: none;
+                @extend %glitchWD;
+            }
+        }
+
+
+        //bot part with text and options
+        &-bot {
+            width: 100%;
+            max-width: $chatBotWidth;
+            padding: 0;
+            display: none;
+            @extend %cf;
+
+            opacity: 0;
+            animation: showText 350ms steps(8);
+            animation-fill-mode: forwards;
+            animation-delay: 550ms;
+        }
+
+
+        &-text {
+            width: 100%;
+            font-weight: $fReg;
+            font-size: $fontL;
+            padding: 0 $safeArea $safeArea;
+            color: $clrGray;
+
+            strong {
+                font-weight: inherit;
+                color: $clrDark;
+            }
+
+            &.jsLoading {
+                opacity: 0;
+            }
+        }
+
+        // btns
+        &-option {
+            display: inline-block;
+            overflow: hidden;
+            opacity: 1;
+            padding-right: $safeArea;
+            transition: all 250ms;
+            height: $safeArea*1.5;
+
+            > * {
+                white-space: nowrap; //NOTE: it's dangerous but it's to prevent margin transition break
+                margin-left: 0;
+                opacity: 1;
+                transition: margin opacity 500ms;
+
+                .jsLoading {
+                    margin-left: -100%;
+                    opacity: 0;
+                }
+            }
+
+            &.remove {
+                height: 1px;
+                opacity: 0;
+            }
+        }
+    }
+}
+
+@include media(phablet) {
+    .chat {
+        &Section {
+            padding: $safeArea*2 0;
+        }
+
+        &Part {
+            &-human {
+                width: $humanWidthPhablet;
+            }
+
+            &-bot {
+                width: $botWidthPhablet;
+                padding: $safeArea $safeArea $safeArea*2 $safeArea*3;
+            }
+        }
+    }
+}
+
+@include media(tablet) {
+    .chat {
+        &Part {
+            padding-left: 0;
+            padding-bottom: 0;
+
+            &-human {
+                width: $humanWidthTablet;
+                padding: $safeArea 0 $safeArea $safeArea;
+                text-align: right;
+            }
+
+            &-title {
+                transition: margin $speed*2;
+                margin-right: 0;
+
+                &.jsLoading {
+                    margin-left: 0;
+                    margin-right: -100%;
+                }
+            }
+
+            &-bot {
+                width: $botWidthTablet;
+                max-width: $chatBotWidthTab;
+            }
+
+            &-text {
+                padding: 0;
+                padding-bottom: $safeArea;
+            }
+
+            &-option {
+                display: inline-block;
+                width: 0;
+                padding: 0;
+                transition: width 250ms;
+
+                &.jsLoading {
+                    width: 49%;
+                }
+            }
+        }
+    }
+}
+
+
+@keyframes showText {
+    0% { opacity: 0; }
+    20% { opacity: 0; }
+    25% { opacity: 1; }
+    45% { opacity: 1; }
+    55% { opacity: 0.4; }
+    75% { opacity: 1; }
+    90% { opacity: 0.6; }
+    100% { opacity: 1; }
+}
